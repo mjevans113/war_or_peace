@@ -16,6 +16,28 @@ class DeckTest < MiniTest::Test
     assert_instance_of Deck, deck
   end
 
+  def test_it_has_cards_with_readable_attributes
+    card1 = Card.new(:diamond, 'Queen', 12)
+    card2 = Card.new(:spade, '3', 3)
+    card3 = Card.new(:heart, 'Ace', 14)
+
+    cards = [card1, card2, card3]
+
+    deck = Deck.new(cards)
+
+    assert_equal :diamond, deck.cards[0].suit
+    assert_equal 'Queen', deck.cards[0].value
+    assert_equal 12, deck.cards[0].rank
+
+    assert_equal :spade, deck.cards[1].suit
+    assert_equal '3', deck.cards[1].value
+    assert_equal 3, deck.cards[1].rank
+
+    assert_equal :heart, deck.cards[2].suit
+    assert_equal 'Ace', deck.cards[2].value
+    assert_equal 14, deck.cards[2].rank
+  end
+
   def test_is_rank_of_card_correct
     card1 = Card.new(:diamond, 'Queen', 12)
     card2 = Card.new(:spade, '3', 3)
