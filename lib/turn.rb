@@ -19,46 +19,49 @@ class Turn
   end
 
   def winner
-    winner_of_turn = ''
     if type == :mutually_assured_destruction
       "No Winner"
     elsif type == :war && @player1.deck.cards[2].rank > @player2.deck.cards[2].rank
-      winner_of_turn = @player1
+      @player1
     elsif type == :war && @player2.deck.cards[2].rank > @player1.deck.cards[2].rank
-      winner_of_turn = @player2
+      @player2
     elsif type == :basic && @player1.deck.cards[0].rank > @player2.deck.cards[0].rank
-      winner_of_turn = @player1
+      @player1
     elsif type == :basic && @player2.deck.cards[0].rank > @player1.deck.cards[0].rank
-      winner_of_turn = @player2
+      @player2
     end
   end
 
   def pile_cards
     if type == :mutually_assured_destruction
-      @player1.deck.remove_card
-      @player1.deck.remove_card
-      @player1.deck.remove_card
-      @player2.deck.remove_card
-      @player2.deck.remove_card
-      @player2.deck.remove_card
+      3.times { @player1.deck.remove_card }
+      3.times { @player2.deck.remove_card }
     elsif type == :war
-      @spoils_of_war << @player1.deck.cards[0]
-      @spoils_of_war << @player1.deck.cards[1]
-      @spoils_of_war << @player1.deck.cards[2]
-      @spoils_of_war << @player2.deck.cards[0]
-      @spoils_of_war << @player2.deck.cards[1]
-      @spoils_of_war << @player2.deck.cards[2]
-      @player1.deck.remove_card
-      @player1.deck.remove_card
-      @player1.deck.remove_card
-      @player2.deck.remove_card
-      @player2.deck.remove_card
-      @player2.deck.remove_card
+      3.times { |index| @spoils_of_war << @player1.deck.cards[index] }
+      3.times { |index| @spoils_of_war << @player2.deck.cards[index] }
+      3.times { @player1.deck.remove_card }
+      3.times { @player2.deck.remove_card }
     elsif type == :basic
       @spoils_of_war << @player1.deck.cards[0]
       @spoils_of_war << @player2.deck.cards[0]
       @player1.deck.remove_card
       @player2.deck.remove_card
+    end
+  end
+
+  def award_spoils(winner)
+    if winner == @player1
+      @spoils_of_war.each do |card|
+        @player1.deck.cards << card
+      end
+      @spoils_of_war = []
+    elsif winner == @player2
+      @spoils_of_war.each do |card|
+        @player2.deck.cards << card
+      end
+      @spoils_of_war = []
+    elsif winner == 'No Winner'
+      @spoils_of_war = []
     end
   end
 end
