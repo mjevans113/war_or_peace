@@ -109,16 +109,6 @@ class TurnTest < MiniTest::Test
     turn = Turn.new(player1, player2)
 
     assert_equal player1, turn.winner
-
-    deck3 = Deck.new([card7, card6, card8, card3])
-    deck4 = Deck.new([card5, card1, card4, card2])
-
-    player3 = Player.new('Michael', deck3)
-    player4 = Player.new('April', deck4)
-
-    turn = Turn.new(player3, player4)
-
-    assert_equal player4, turn.winner
   end
 
   def test_is_winner_correct_for_turn_type_war
@@ -140,16 +130,6 @@ class TurnTest < MiniTest::Test
     turn = Turn.new(player1, player2)
 
     assert_equal player2, turn.winner
-
-    deck3 = Deck.new([card4, card7, card8, card2])
-    deck4 = Deck.new([card1, card6, card3, card5])
-
-    player3 = Player.new('April', deck3)
-    player4 = Player.new('Michael', deck4)
-
-    turn = Turn.new(player3, player4)
-
-    assert_equal player4, turn.winner
   end
 
   def test_there_is_no_winner_for_turn_type_mutually_assured_destruction
@@ -191,8 +171,10 @@ class TurnTest < MiniTest::Test
 
     turn = Turn.new(player1, player2)
 
-    assert_equal player2.deck.cards, turn.pile_cards
+    turn.pile_cards
+
     assert_equal player1.deck.cards, [card2, card5, card8]
+    assert_equal player2.deck.cards, [card4, card6, card7]
     assert_equal turn.spoils_of_war, [card1, card3]
   end
 
@@ -214,12 +196,14 @@ class TurnTest < MiniTest::Test
 
     turn = Turn.new(player1, player2)
 
-    assert_equal player2.deck.cards, turn.pile_cards
+    turn.pile_cards
+
     assert_equal player1.deck.cards, [card8]
+    assert_equal player2.deck.cards, [card7]
     assert_equal turn.spoils_of_war, [card1, card2, card5, card4, card3, card6]
   end
 
-  def test_cards_are_added_to_pile_correctly_for_turn_type_mutually_assured_destruction
+  def test_cards_are_not_added_to_pile_for_turn_type_mutually_assured_destruction
     card1 = Card.new(:heart, 'Jack', 11)
     card2 = Card.new(:heart, '10', 10)
     card3 = Card.new(:heart, '9', 9)
@@ -237,8 +221,97 @@ class TurnTest < MiniTest::Test
 
     turn = Turn.new(player1, player2)
 
-    assert_equal player2.deck.cards, turn.pile_cards
+    turn.pile_cards
+
     assert_equal player1.deck.cards, [card8]
+    assert_equal player2.deck.cards, [card7]
+    assert_equal turn.spoils_of_war, []
+  end
+
+  def test_are_spoils_awarded_correctly_for_turn_type_basic
+    card1 = Card.new(:heart, 'Jack', 11)
+    card2 = Card.new(:heart, '10', 10)
+    card3 = Card.new(:heart, '9', 9)
+    card4 = Card.new(:diamond, 'Jack', 11)
+    card5 = Card.new(:heart, '8', 8)
+    card6 = Card.new(:diamond, 'Queen', 12)
+    card7 = Card.new(:heart, '3', 3)
+    card8 = Card.new(:diamond, '2', 2)
+
+    deck1 = Deck.new([card1, card2, card5, card8])
+    deck2 = Deck.new([card3, card4, card6, card7])
+
+    player1 = Player.new("Megan", deck1)
+    player2 = Player.new("Aurora", deck2)
+
+    turn = Turn.new(player1, player2)
+
+    winner = turn.winner
+
+    turn.pile_cards
+
+    turn.award_spoils(winner)
+
+    assert_equal player1.deck.cards, [card2, card5, card8, card1, card3]
+    assert_equal player2.deck.cards, [card4, card6, card7]
+    assert_equal turn.spoils_of_war, []
+  end
+
+  def test_are_spoils_awarded_correctly_for_turn_type_war
+    card1 = Card.new(:heart, 'Jack', 11)
+    card2 = Card.new(:heart, '10', 10)
+    card3 = Card.new(:heart, '9', 9)
+    card4 = Card.new(:diamond, 'Jack', 11)
+    card5 = Card.new(:heart, '8', 8)
+    card6 = Card.new(:diamond, 'Queen', 12)
+    card7 = Card.new(:heart, '3', 3)
+    card8 = Card.new(:diamond, '2', 2)
+
+    deck1 = Deck.new([card1, card2, card5, card8])
+    deck2 = Deck.new([card4, card3, card6, card7])
+
+    player1 = Player.new("Megan", deck1)
+    player2 = Player.new("Aurora", deck2)
+
+    turn = Turn.new(player1, player2)
+
+    winner = turn.winner
+
+    turn.pile_cards
+
+    turn.award_spoils(winner)
+
+    assert_equal player1.deck.cards, [card8]
+    assert_equal player2.deck.cards, [card7, card1, card2, card5, card4, card3, card6]
+    assert_equal turn.spoils_of_war, []
+  end
+
+  def test_spoils_are_not_awarded_for_turn_type_mutually_assured_destruction
+    card1 = Card.new(:heart, 'Jack', 11)
+    card2 = Card.new(:heart, '10', 10)
+    card3 = Card.new(:heart, '9', 9)
+    card4 = Card.new(:diamond, 'Jack', 11)
+    card5 = Card.new(:heart, '8', 8)
+    card6 = Card.new(:diamond, '8', 8)
+    card7 = Card.new(:heart, '3', 3)
+    card8 = Card.new(:diamond, '2', 2)
+
+    deck1 = Deck.new([card1, card2, card5, card8])
+    deck2 = Deck.new([card4, card3, card6, card7])
+
+    player1 = Player.new("Megan", deck1)
+    player2 = Player.new("Aurora", deck2)
+
+    turn = Turn.new(player1, player2)
+
+    winner = turn.winner
+
+    turn.pile_cards
+
+    turn.award_spoils(winner)
+
+    assert_equal player1.deck.cards, [card8]
+    assert_equal player2.deck.cards, [card7]
     assert_equal turn.spoils_of_war, []
   end
 end
