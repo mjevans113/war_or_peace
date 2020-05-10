@@ -37,6 +37,9 @@ class Deck
 
   def remove_card
     @cards.shift
+    if @cards.nil?
+      return @cards = []
+    end
     @cards
   end
 
