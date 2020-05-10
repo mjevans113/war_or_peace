@@ -173,9 +173,9 @@ class TurnTest < MiniTest::Test
 
     turn.pile_cards
 
-    assert_equal player1.deck.cards, [card2, card5, card8]
-    assert_equal player2.deck.cards, [card4, card6, card7]
-    assert_equal turn.spoils_of_war, [card1, card3]
+    assert_equal [card2, card5, card8], player1.deck.cards
+    assert_equal [card4, card6, card7], player2.deck.cards
+    assert_equal [card1, card3], turn.spoils_of_war
   end
 
   def test_cards_are_added_to_pile_correctly_for_turn_type_war
@@ -198,9 +198,9 @@ class TurnTest < MiniTest::Test
 
     turn.pile_cards
 
-    assert_equal player1.deck.cards, [card8]
-    assert_equal player2.deck.cards, [card7]
-    assert_equal turn.spoils_of_war, [card1, card2, card5, card4, card3, card6]
+    assert_equal [card8], player1.deck.cards
+    assert_equal [card7], player2.deck.cards
+    assert_equal [card1, card2, card5, card4, card3, card6], turn.spoils_of_war
   end
 
   def test_cards_are_not_added_to_pile_for_turn_type_mutually_assured_destruction
@@ -223,9 +223,9 @@ class TurnTest < MiniTest::Test
 
     turn.pile_cards
 
-    assert_equal player1.deck.cards, [card8]
-    assert_equal player2.deck.cards, [card7]
-    assert_equal turn.spoils_of_war, []
+    assert_equal [card8], player1.deck.cards
+    assert_equal [card7], player2.deck.cards
+    assert_equal [], turn.spoils_of_war
   end
 
   def test_are_spoils_awarded_correctly_for_turn_type_basic
@@ -252,9 +252,9 @@ class TurnTest < MiniTest::Test
 
     turn.award_spoils(winner)
 
-    assert_equal player1.deck.cards, [card2, card5, card8, card1, card3]
-    assert_equal player2.deck.cards, [card4, card6, card7]
-    assert_equal turn.spoils_of_war, []
+    assert_equal [card2, card5, card8, card1, card3], player1.deck.cards
+    assert_equal [card4, card6, card7], player2.deck.cards
+    assert_equal [], turn.spoils_of_war
   end
 
   def test_are_spoils_awarded_correctly_for_turn_type_war
@@ -281,9 +281,9 @@ class TurnTest < MiniTest::Test
 
     turn.award_spoils(winner)
 
-    assert_equal player1.deck.cards, [card8]
-    assert_equal player2.deck.cards, [card7, card1, card2, card5, card4, card3, card6]
-    assert_equal turn.spoils_of_war, []
+    assert_equal [card8], player1.deck.cards
+    assert_equal [card7, card1, card2, card5, card4, card3, card6], player2.deck.cards
+    assert_equal [], turn.spoils_of_war
   end
 
   def test_spoils_are_not_awarded_for_turn_type_mutually_assured_destruction
@@ -310,8 +310,8 @@ class TurnTest < MiniTest::Test
 
     turn.award_spoils(winner)
 
-    assert_equal player1.deck.cards, [card8]
-    assert_equal player2.deck.cards, [card7]
-    assert_equal turn.spoils_of_war, []
+    assert_equal [card8], player1.deck.cards
+    assert_equal [card7], player2.deck.cards
+    assert_equal [], turn.spoils_of_war
   end
 end
