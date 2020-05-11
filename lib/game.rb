@@ -30,10 +30,10 @@ class Game
       if @player1.has_lost? || @player2.has_lost?
         p "*~*~*~* #{winner.name} has won the game! *~*~*~*"
         break
-      elsif turn.type == :player1_loss
+      elsif turn.type == :player1_not_enough_cards_for_war
         p "*~*~*~* #{@player2.name} has won the game! *~*~*~*"
         break
-      elsif turn.type == :player2_loss
+      elsif turn.type == :player2_not_enough_cards_for_war
         p "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
         break
       elsif turn.type == :mutually_assured_destruction
